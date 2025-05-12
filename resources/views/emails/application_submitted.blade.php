@@ -6,4 +6,12 @@
     <li><strong>Phone:</strong> {{ $phone }}</li>
     <li><strong>Address:</strong> {{ $address }}</li>
     <li><strong>Position:</strong> {{ $position }}</li>
+    <li><strong>Resume:</strong>
+    @if($application->resume)
+        <a href="{{ asset('storage/' . $application->resume) }}" target="_blank">Download Resume</a>
+    @else
+        Not provided
+    @endif
+    </li> 
+</li>
 </ul>

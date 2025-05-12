@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('employers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // Add the user_id column to link the employer to a user
-            $table->string('position');
-            $table->string('company_name');
-            $table->string('department');
-            $table->string('location');
+            $table->string('position')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('department')->nullable();
+            $table->string('location')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

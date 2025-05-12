@@ -1,10 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Application;
+use App\Models\User;
+use App\Models\CandidatePreference;
 use App\Models\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\JobAlertMail;
+use Illuminate\Support\Facades\Mail;
 
 class JobPostController extends Controller
 {
@@ -26,17 +30,31 @@ class JobPostController extends Controller
             return redirect()->route('employer.dashboard')->with('error', 'Employer not found for this user.');
         }
 
-        // Create the job post with the employer's ID
-        JobPost::create([
-            'position' => $request->position,
-            'company_name' => $request->company_name,
-            'department' => $request->department,
-            'location' => $request->location,
-            'employer_id' => $employer->id, // Safe access to employer id
-        ]);
+       // 3) Create the job post
+       $job = JobPost::create([
+        'position'     => $request->position,
+        'company_name' => $request->company_name,
+        'department'   => $request->department,
+        'location'     => $request->location,
+        'employer_id'  => $employer->id,
+    ]);
 
+  // 4) Notify matching candidates based on Applications
+        $matchingCandidateIds = Application::where('position', $job->position)
+        ->orWhere('location', $job->location)
+        // ->orWhere('department', $job->department) // only if `department` exists in `applications`
+        ->pluck('user_id')
+        ->unique();
+
+        $candidates = User::whereIn('id', $matchingCandidateIds)->get();
+
+        foreach ($candidates as $candidate) {
+        Mail::to($candidate->email)
+            ->send(new JobAlertMail($job));  
+        }
+    
         // Redirect back to the dashboard with a success message
-        return redirect()->route('employer.dashboard')->with('success', 'Job post created successfully!');
+        return redirect()->route('employer.dashboard')->with('success', 'Job post created successfully and matching candidates notified!!');
     }
    
     // Show all job posts for the employer

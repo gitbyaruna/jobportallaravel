@@ -12,8 +12,8 @@ use App\Http\Controllers\CandidateController;
 // Authentication Routes
 Route::get('/register', [RegisterController::class, 'show'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
-Route::get('/login', [LoginController::class, 'show'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
+Route::get('/', [LoginController::class, 'show'])->name('login');
+Route::post('/', [LoginController::class, 'login']);
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 
@@ -102,8 +102,9 @@ Route::middleware(['auth'])->prefix('candidate')->name('candidate.')->group(func
 // Route::post('/candidate/apply/{jobPost}', [CandidateController::class, 'submitApplication'])->name('candidate.job.apply');
 
 
+Route::get('/job/{id}', [CandidateController::class, 'view'])->name('job.details');
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });

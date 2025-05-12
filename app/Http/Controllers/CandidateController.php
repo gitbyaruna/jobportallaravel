@@ -58,8 +58,13 @@ class CandidateController extends Controller
            'phone' => 'required|string',
            'address' => 'required|string',
            'position' => 'required|string',
+           'resume' => 'nullable|mimes:pdf|max:2048',
        ]);
    
+       $resumePath = null;
+if ($request->hasFile('resume')) {
+    $resumePath = $request->file('resume')->store('resumes', 'public');
+}
        // Create the application record
        $application = new Application();
        $application->job_post_id = $jobPost->id;
@@ -69,6 +74,9 @@ class CandidateController extends Controller
        $application->phone = $validated['phone'];
        $application->address = $validated['address'];
        $application->position = $validated['position'];
+       $application->resume = $resumePath;
+       $application->department = $jobPost->department;
+$application->location = $jobPost->location;
        $application->save();
    
        // Get the employer's email dynamically from the job post

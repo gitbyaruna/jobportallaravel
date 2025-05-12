@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <h3 class="mb-4">Apply for {{ $jobPost->position }}</h3>
 
-    <form method="POST" action="{{ route('candidate.job.apply', $jobPost->id) }}">
+    <form method="POST" action="{{ route('candidate.job.apply', $jobPost->id) }}" enctype="multipart/form-data">
         @csrf
 
         <div class="mb-3">
@@ -31,6 +31,12 @@
             <label for="position" class="form-label">Position</label>
             <input type="text" name="position" class="form-control" value="{{ $jobPost->position }}" readonly>
         </div>
+
+        <div class="mb-3">
+    <label>Upload Resume (PDF)</label>
+    <input type="file" name="resume" class="form-control" accept=".pdf">
+    @error('resume') <small class="text-danger">{{ $message }}</small> @enderror
+</div>
 
         <button type="submit" class="btn btn-primary">Submit Application</button>
     </form>

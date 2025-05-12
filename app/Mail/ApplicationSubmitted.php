@@ -40,5 +40,12 @@ class ApplicationSubmitted extends Mailable
                         'address' => $this->application->address,
                         'position' => $this->application->position,
                     ]);
+
+                       // Attach the resume if it exists
+    if ($this->application->resume && \Storage::disk('public')->exists($this->application->resume)) {
+        $email->attach(storage_path('app/public/' . $this->application->resume));
+    }
+
+    return $email;
     }
 }

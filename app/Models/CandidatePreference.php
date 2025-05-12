@@ -1,22 +1,20 @@
 <?php
 
-// app/Models/Application.php
-
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Application extends Model
+
+class CandidatePreference extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
-        'job_post_id',
-        'name',
-        'email',
-        'phone',
-        'address',
         'position',
-        'resume',
+        'location',
+        'department',
     ];
 
     public function user()
